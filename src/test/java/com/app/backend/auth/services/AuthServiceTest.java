@@ -14,6 +14,7 @@ import com.app.backend.users.repository.UsersRepository;
 import com.app.backend.users.services.UsersService;
 
 public class AuthServiceTest {
+
   private AuthService authService;
   private UsersService usersService;
   private UserEntity user;
