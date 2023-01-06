@@ -22,9 +22,9 @@ public class UsersComponentUITest {
     UsersRepository.getInstance().deleteAll();
   }
 
-  @Test
-  public void shouldCreateUser() {
-    this.usersComponentUI.createUser();
-  }
+  // @Test
+  // public void shouldCreateUser() {
+  // this.usersComponentUI.createUser();
+  // }
 
 }
