@@ -150,6 +150,22 @@ public class UsersServicesTest {
     assertEquals(userUpdated, expectedUser);
   }
 
+  @Test(expected = BadRequestException.class)
+  public void shouldNotUpdateBadEmail() throws NotFoundException, BadRequestException {
+    UserDTO dataToUpdate;
+    UserEntity user;
+
+    user = new UserEntity("999999", "Erick Erazo", "erick@mail.com", "123456");
+
+    dataToUpdate = new UserDTO("Alex", "alex@.com", "123456");
+
+    Mockito.when(usersRepository.getById(user.getId())).thenReturn(user);
+    Mockito.when(usersRepository.update(eq(user.getId()), any(UserEntity.class)))
+        .thenAnswer(invocation -> invocation.getArgument(1, UserEntity.class));
+
+    this.usersService.update(user.getId(), dataToUpdate);
+  }
+
   @Test(expected = NotFoundException.class)
   public void shouldThrowsNotFoundExceptionOnDelete() throws NotFoundException {
     UserEntity expectedUser;

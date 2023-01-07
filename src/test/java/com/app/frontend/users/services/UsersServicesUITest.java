@@ -40,11 +40,11 @@ public class UsersServicesUITest {
 
     expectedUser = new UserEntity("999999", "Alex Padilla", "alex@mail.com", "222222");
     userDTO = new UserDTO("Alex Padilla", "alex@mail.com", "222222");
-    expectedResponse = new Response(false, "User created", expectedUser);
+    expectedResponse = new SucessResponse("User created", expectedUser);
 
     Mockito.when(usersController.create(userDTO)).thenReturn(expectedResponse);
 
-    response = this.usersServicesUI.createUser(userDTO);
+    response = this.usersServicesUI.create(userDTO);
 
     assertEquals(response, expectedResponse);
   }
@@ -136,7 +136,7 @@ public class UsersServicesUITest {
 
     Mockito.when(usersController.create(userDTO)).thenReturn(expectedResponse);
 
-    response = this.usersServicesUI.createUser(userDTO);
+    response = this.usersServicesUI.create(userDTO);
 
     assertEquals(response, expectedResponse);
   }

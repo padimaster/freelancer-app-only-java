@@ -1,9 +1,9 @@
-package com.app.frontend.users;
+package com.app.frontend.users.components;
+
+import java.util.Scanner;
 
 import com.app.backend.common.responses.Response;
-import com.app.backend.users.controllers.UsersController;
 import com.app.backend.users.dtos.UserDTO;
-import com.app.backend.users.entities.UserEntity;
 import com.app.frontend.users.services.UsersServicesUI;
 import com.app.frontend.users.utils.input.UserInput;
 import com.app.frontend.users.utils.output.UserOutput;
@@ -12,7 +12,6 @@ public class UsersComponentUI {
   private UsersServicesUI usersServicesUI;
   private UserInput userInput;
   private UserOutput userOutput;
-  private UserEntity admin;
 
   // public UsersComponentUI(UserEntity admin, UsersController usersController) {
   // this.usersServicesUI = new UsersServicesUI(usersController);
@@ -22,18 +21,18 @@ public class UsersComponentUI {
   // }
 
   public UsersComponentUI(UsersServicesUI usersServicesUI) {
-    this.usersServicesUI = usersServicesUI;
     this.userInput = new UserInput();
+    this.usersServicesUI = usersServicesUI;
     this.userOutput = new UserOutput();
   }
 
-  public void createUser() {
+  public void create() {
     Response response;
     UserDTO createUserDTO;
 
     createUserDTO = this.userInput.readUserDTO();
 
-    response = this.usersServicesUI.createUser(createUserDTO);
+    response = this.usersServicesUI.create(createUserDTO);
 
     this.userOutput.printResponse(response);
   }

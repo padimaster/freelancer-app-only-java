@@ -4,6 +4,10 @@ import com.app.backend.users.dtos.UserDTO;
 import com.app.frontend.common.input.Input;
 
 public class UserInput extends Input {
+  public UserInput() {
+    super();
+  }
+
   public UserDTO readUserDTO() {
     UserDTO userDTO;
     String name;

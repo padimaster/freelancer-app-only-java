@@ -1,4 +1,4 @@
-package com.app.backend.common.validators;
+package com.app.common.validators;
 
 public class ClassValidator {
   public static boolean isString(String value) {
@@ -15,6 +15,13 @@ public class ClassValidator {
   }
 
   public static boolean isEmail(String value) {
-    return value != null && value.matches("^[A-Za-z0-9+_.-]+@(.+)$");
+    String regex;
+    boolean isValid;
+
+    regex = "^[\\w!#$%&amp;'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&amp;'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
+
+    isValid = value != null && value.matches(regex);
+
+    return isValid;
   }
 }

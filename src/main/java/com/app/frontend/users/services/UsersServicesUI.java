@@ -11,7 +11,7 @@ public class UsersServicesUI {
     this.usersController = usersController;
   }
 
-  public Response createUser(UserDTO creaUserDTO) {
+  public Response create(UserDTO creaUserDTO) {
     Response response;
     response = this.usersController.create(creaUserDTO);
 

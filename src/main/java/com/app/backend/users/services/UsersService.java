@@ -84,7 +84,7 @@ public class UsersService {
 
     userUpdated = this.repository.update(id, dataToUpdate);
 
-    return dataToUpdate;
+    return userUpdated;
   }
 
   public UserEntity delete(String id) throws NotFoundException {

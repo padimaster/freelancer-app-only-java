@@ -7,15 +7,14 @@ import com.app.backend.users.services.UsersService;
 public class UsersModule {
   private UsersController usersController;
   protected UsersService usersService;
-  private UsersRepository usersRepository;
 
   private static UsersModule instance = null;
 
   private UsersModule() {
-    UsersRepository.getInstance();
-    UsersService.initInstance(usersRepository);
-    UsersController.initInstance(usersService);
+    UsersService.initInstance(UsersRepository.getInstance());
     this.usersService = UsersService.getInstance();
+
+    UsersController.initInstance(usersService);
     this.usersController = UsersController.getInstance();
   }
 
@@ -28,10 +27,6 @@ public class UsersModule {
       throw new RuntimeException("Users Module not initialized");
     }
     return instance;
-  }
-
-  public UsersRepository getUsersRepository() {
-    return usersRepository;
   }
 
   public UsersService getUsersService() {

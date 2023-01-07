@@ -1,6 +1,7 @@
 package com.app.backend.common.validators;
 
 import com.app.backend.users.dtos.UserDTO;
+import com.app.common.validators.ClassValidator;
 
 public class UserValidator {
   public static boolean isCreateUserDTO(UserDTO user) {
