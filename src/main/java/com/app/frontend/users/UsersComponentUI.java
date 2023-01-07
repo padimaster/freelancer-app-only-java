@@ -1,6 +1,7 @@
 package com.app.frontend.users;
 
 import com.app.backend.common.responses.Response;
+import com.app.backend.users.controllers.UsersController;
 import com.app.backend.users.dtos.UserDTO;
 import com.app.backend.users.entities.UserEntity;
 import com.app.frontend.users.services.UsersServicesUI;
@@ -13,15 +14,15 @@ public class UsersComponentUI {
   private UserOutput userOutput;
   private UserEntity admin;
 
-  public UsersComponentUI(UserEntity admin) {
-    this.usersServicesUI = new UsersServicesUI();
-    this.userInput = new UserInput();
-    this.userOutput = new UserOutput();
-    this.admin = admin;
-  }
+  // public UsersComponentUI(UserEntity admin, UsersController usersController) {
+  // this.usersServicesUI = new UsersServicesUI(usersController);
+  // this.userInput = new UserInput();
+  // this.userOutput = new UserOutput();
+  // this.admin = admin;
+  // }
 
-  public UsersComponentUI() {
-    this.usersServicesUI = new UsersServicesUI();
+  public UsersComponentUI(UsersServicesUI usersServicesUI) {
+    this.usersServicesUI = usersServicesUI;
     this.userInput = new UserInput();
     this.userOutput = new UserOutput();
   }
@@ -51,7 +52,7 @@ public class UsersComponentUI {
   public void getAllUsers() {
     Response response;
 
-    response = this.usersServicesUI.getAllUsers();
+    response = this.usersServicesUI.getAll();
 
     this.userOutput.printResponse(response);
   }
@@ -64,7 +65,7 @@ public class UsersComponentUI {
     userId = this.userInput.readString("Enter the user id:");
     updateUserDTO = this.userInput.readUserDTO();
 
-    response = this.usersServicesUI.updateUser(userId, updateUserDTO);
+    response = this.usersServicesUI.update(userId, updateUserDTO);
 
     this.userOutput.printResponse(response);
   }
@@ -75,7 +76,7 @@ public class UsersComponentUI {
 
     userId = this.userInput.readString("Enter the user id:");
 
-    response = this.usersServicesUI.deleteUser(userId);
+    response = this.usersServicesUI.delete(userId);
 
     this.userOutput.printResponse(response);
   }

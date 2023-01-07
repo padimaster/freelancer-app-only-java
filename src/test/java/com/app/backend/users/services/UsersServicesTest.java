@@ -1,127 +1,123 @@
 package com.app.backend.users.services;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 
+import java.lang.reflect.Field;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import com.app.backend.common.errors.BadRequestException;
 import com.app.backend.common.errors.NotFoundException;
 import com.app.backend.users.dtos.UserDTO;
 import com.app.backend.users.entities.UserEntity;
 import com.app.backend.users.repository.UsersRepository;
-import com.app.backend.users.services.UsersService;
 
 public class UsersServicesTest {
+  private UsersRepository usersRepository;
   private UsersService usersService;
-  private UserEntity userTest;
 
   @Before
   public void setUp() {
+    this.usersRepository = mock(UsersRepository.class);
+    setMock(usersRepository);
+    UsersService.initInstance(usersRepository);
     this.usersService = UsersService.getInstance();
-    this.userTest = new UserEntity("999999", "Alex Padilla", "alex@mail.com", "222222");
-
-    UsersRepository.getInstance().insert(this.userTest);
-  }
-
-  @After
-  public void tearDown() {
-    UsersRepository.getInstance().deleteAll();
   }
 
   @Test
   public void shouldCreateUser() throws BadRequestException {
-    int initialRespositorySize;
     UserDTO userDto;
+    UserEntity expectedUser;
     UserEntity userCreated;
 
-    userDto = new UserDTO("Erick", "erick@mail.com", "123456");
-    initialRespositorySize = this.usersService.getAll().size();
+    expectedUser = new UserEntity("999999", "Erick Erazo", "erick@mail.com", "123456");
+    userDto = new UserDTO(expectedUser.getName(), expectedUser.getEmail(), expectedUser.getPassword());
+
+    Mockito.when(usersRepository.insert(Mockito.any(UserEntity.class))).thenReturn(expectedUser);
+    Mockito.when(usersRepository.generateId()).thenReturn(expectedUser.getId());
+
     userCreated = usersService.create(userDto);
 
-    assertTrue(this.usersService.getAll().size() == initialRespositorySize + 1);
-    System.out.println(userCreated);
+    assertEquals(userCreated, expectedUser);
   }
 
   @Test
   public void shouldGetUserById() throws NotFoundException {
-    String userId;
-    UserEntity userToFind;
+    UserEntity expectedUser;
+    UserEntity userFinded;
 
-    userId = this.userTest.getId();
-    userToFind = this.usersService.getById(userId);
+    expectedUser = new UserEntity("999999", "Erick Erazo", "erick@mail.com", "123456");
+    Mockito.when(usersRepository.getById(expectedUser.getId())).thenReturn(expectedUser);
 
-    assertTrue(userToFind.equals(this.userTest));
+    userFinded = this.usersService.getById(expectedUser.getId());
+
+    assertEquals(userFinded, expectedUser);
   }
 
   @Test
   public void shouldUpdateUser() throws NotFoundException, BadRequestException {
-    String userId;
     UserDTO dataToUpdate;
+    UserEntity user;
     UserEntity userUpdated;
-    UserEntity expectedUserUpdated;
+    UserEntity expectedUser;
 
-    userId = this.userTest.getId();
+    user = new UserEntity("999999", "Erick Erazo", "erick@mail.com", "123456");
+    expectedUser = new UserEntity("999999", "Kenny Pinchao", "kenny@mail.com", "888888");
+
     dataToUpdate = new UserDTO("Kenny Pinchao", "kenny@mail.com", "888888");
 
-    userUpdated = this.usersService.update(userId, dataToUpdate);
-    expectedUserUpdated = new UserEntity(userId, dataToUpdate);
+    Mockito.when(usersRepository.getById(user.getId())).thenReturn(user);
+    Mockito.when(usersRepository.update(eq(expectedUser.getId()), any(UserEntity.class)))
+        .thenAnswer(invocation -> invocation.getArgument(1, UserEntity.class));
 
-    assertTrue(userUpdated.equals(expectedUserUpdated));
-  }
+    userUpdated = this.usersService.update(user.getId(), dataToUpdate);
 
-  @Test
-  public void shouldUpdateUserEmail() throws NotFoundException, BadRequestException {
-    String userId;
-    UserDTO dataToUpdate;
-    UserEntity userUpdated;
-    UserEntity expectedUserUpdated;
-
-    userId = this.userTest.getId();
-    dataToUpdate = new UserDTO(null, "kenny@mail.com", null);
-
-    userUpdated = this.usersService.update(userId, dataToUpdate);
-    expectedUserUpdated = new UserEntity(userId, this.userTest.getName(), dataToUpdate.getEmail(),
-        this.userTest.getPassword());
-
-    assertTrue(userUpdated.equals(expectedUserUpdated));
+    assertEquals(userUpdated, expectedUser);
   }
 
   @Test
   public void shouldUpdateUserNameAndPassword() throws NotFoundException, BadRequestException {
-    String userId;
     UserDTO dataToUpdate;
+    UserEntity user;
     UserEntity userUpdated;
-    UserEntity expectedUserUpdated;
+    UserEntity expectedUser;
 
-    userId = this.userTest.getId();
-    dataToUpdate = new UserDTO("Alex Padilla", null, "4567891");
+    user = new UserEntity("999999", "Erick Erazo", "erick@mail.com", "123456");
+    expectedUser = new UserEntity("999999", "Kenny Pinchao", "erick@mail.com", "888888");
 
-    userUpdated = this.usersService.update(userId, dataToUpdate);
-    expectedUserUpdated = new UserEntity(userId, dataToUpdate.getName(), this.userTest.getEmail(),
-        dataToUpdate.getPassword());
+    dataToUpdate = new UserDTO("Kenny Pinchao", "", "888888");
 
-    assertTrue(userUpdated.equals(expectedUserUpdated));
+    Mockito.when(usersRepository.getById(user.getId())).thenReturn(user);
+    Mockito.when(usersRepository.update(eq(expectedUser.getId()), any(UserEntity.class)))
+        .thenAnswer(invocation -> invocation.getArgument(1, UserEntity.class));
+
+    userUpdated = this.usersService.update(user.getId(), dataToUpdate);
+
+    assertEquals(userUpdated, expectedUser);
   }
 
   @Test
-  public void shouldDeleteUser() {
-    int initialRespositorySize;
-    String userId;
+  public void shouldDeleteUser() throws NotFoundException {
+    UserEntity expectedUser;
     UserEntity userDeleted;
 
-    userId = this.userTest.getId();
-    initialRespositorySize = this.usersService.getAll().size();
+    expectedUser = new UserEntity("999999", "Erick Erazo", "erick@mail.com", "123456");
 
-    userDeleted = this.usersService.delete(userId);
+    Mockito.when(usersRepository.getById(expectedUser.getId())).thenReturn(expectedUser);
+    Mockito.when(usersRepository.delete(expectedUser.getId())).thenReturn(expectedUser);
 
-    assertTrue(this.usersService.getAll().size() == initialRespositorySize - 1);
-    assertTrue(userDeleted.equals(this.userTest));
+    userDeleted = this.usersService.delete(expectedUser.getId());
+
+    assertEquals(userDeleted, expectedUser);
   }
 
   @Test(expected = BadRequestException.class)
-  public void shouldThrowsBadRequestException() throws BadRequestException {
+  public void shouldThrowsBadRequestExceptionOnCreate() throws BadRequestException {
     UserDTO userDto;
 
     userDto = new UserDTO(null, "erick@mail.com", "123456");
@@ -129,7 +125,56 @@ public class UsersServicesTest {
   }
 
   @Test(expected = NotFoundException.class)
-  public void shouldThrowsNotFoundException() throws NotFoundException {
+  public void shouldThrowsNotFoundExceptionOnGetById() throws NotFoundException {
     this.usersService.getById("inventedId");
+  }
+
+  @Test
+  public void shouldNotUpdate() throws NotFoundException, BadRequestException {
+    UserDTO dataToUpdate;
+    UserEntity user;
+    UserEntity userUpdated;
+    UserEntity expectedUser;
+
+    user = new UserEntity("999999", "Erick Erazo", "erick@mail.com", "123456");
+    expectedUser = new UserEntity("999999", "Erick Erazo", "erick@mail.com", "123456");
+
+    dataToUpdate = new UserDTO("", "", "");
+
+    Mockito.when(usersRepository.getById(user.getId())).thenReturn(user);
+    Mockito.when(usersRepository.update(eq(expectedUser.getId()), any(UserEntity.class)))
+        .thenAnswer(invocation -> invocation.getArgument(1, UserEntity.class));
+
+    userUpdated = this.usersService.update(user.getId(), dataToUpdate);
+
+    assertEquals(userUpdated, expectedUser);
+  }
+
+  @Test(expected = NotFoundException.class)
+  public void shouldThrowsNotFoundExceptionOnDelete() throws NotFoundException {
+    UserEntity expectedUser;
+
+    expectedUser = new UserEntity("999999", "Erick Erazo", "erick@mail.com", "123456");
+
+    Mockito.when(usersRepository.getById("RandomId")).thenReturn(null);
+
+    this.usersService.delete(expectedUser.getId());
+  }
+
+  @After
+  public void resetSingleton() throws Exception {
+    Field instance = UsersRepository.class.getDeclaredField("instance");
+    instance.setAccessible(true);
+    instance.set(null, null);
+  }
+
+  private void setMock(UsersRepository mock) {
+    try {
+      Field instance = UsersRepository.class.getDeclaredField("instance");
+      instance.setAccessible(true);
+      instance.set(instance, mock);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 }

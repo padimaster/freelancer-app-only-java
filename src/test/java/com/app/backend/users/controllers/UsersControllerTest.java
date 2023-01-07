@@ -2,98 +2,143 @@ package com.app.backend.users.controllers;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.mockito.Mockito.mock;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
+import com.app.backend.common.errors.BadRequestException;
+import com.app.backend.common.errors.NotFoundException;
 import com.app.backend.common.responses.Response;
-import com.app.backend.users.controllers.UsersController;
+import com.app.backend.common.responses.SucessResponse;
 import com.app.backend.users.dtos.UserDTO;
 import com.app.backend.users.entities.UserEntity;
 import com.app.backend.users.repository.UsersRepository;
+import com.app.backend.users.services.UsersService;
 
 public class UsersControllerTest {
+  private UsersService usersService;
   private UsersController usersController;
-  private UserEntity userTest;
 
   @Before
   public void setUp() {
+    this.usersService = mock(UsersService.class);
+    setMock(usersService);
+    UsersController.initInstance(usersService);
     this.usersController = UsersController.getInstance();
-    this.userTest = new UserEntity("999999", "Alex Padilla", "alex@mail.com", "222222");
-    UsersRepository.getInstance().insert(this.userTest);
-  }
-
-  @After
-  public void tearDown() {
-    UsersRepository.getInstance().deleteAll();
   }
 
   @Test
-  public void shouldCreateUser() {
+  public void shouldCreateUser() throws BadRequestException {
     UserDTO userDto;
+    UserEntity expectedUser;
     Response response;
-    UserEntity userCreated;
+    Response expectedResponse;
 
-    userDto = new UserDTO("Erick", "erick@mail.com", "123456");
+    expectedUser = new UserEntity("999999", "Alex Padilla", "alex@mail.com", "222222");
+    userDto = new UserDTO("Alex Padilla", "alex@mail.com", "222222");
+
+    Mockito.when(usersService.create(userDto)).thenReturn(expectedUser);
+
     response = this.usersController.create(userDto);
-    userCreated = (UserEntity) response.getData();
+    expectedResponse = new SucessResponse("User created", expectedUser);
 
-    assertNotEquals(userCreated, null);
+    assertEquals(response, expectedResponse);
   }
 
   @Test
-  public void shouldGetUserById() {
-    String userId;
+  public void shouldGetUserById() throws BadRequestException, NotFoundException {
+    UserEntity expectedUser;
     Response response;
-    UserEntity userToFind;
+    Response expectedResponse;
 
-    userId = this.userTest.getId();
-    response = this.usersController.getById(userId);
-    userToFind = (UserEntity) response.getData();
+    expectedUser = new UserEntity("999999", "Alex Padilla", "alex@mail.com", "222222");
 
-    assertEquals(userToFind, this.userTest);
+    Mockito.when(usersService.getById(expectedUser.getId())).thenReturn(expectedUser);
+
+    response = this.usersController.getById(expectedUser.getId());
+
+    expectedResponse = new SucessResponse("User found", expectedUser);
+
+    assertEquals(response, expectedResponse);
   }
 
   @Test
-  public void shouldUpdateUser() {
-    String userId;
+  public void shouldUpdateUser() throws BadRequestException, NotFoundException {
     UserDTO userDto;
+    UserEntity userToUpdate;
+    UserEntity expectedUser;
     Response response;
-    UserEntity userUpdated;
+    Response expectedResponse;
 
-    userId = this.userTest.getId();
-    userDto = new UserDTO("Kenny Pinchao", "kenny@mail.com", "888888");
+    userToUpdate = new UserEntity("999999", "Erick Erazo", "erick@mail.com", "111111");
+    expectedUser = new UserEntity("999999", "Alex Padilla", "alex@mail.com", "222222");
+    userDto = new UserDTO("Alex Padilla", "alex@mail.com", "222222");
 
-    response = this.usersController.update(userId, userDto);
-    userUpdated = (UserEntity) response.getData();
+    Mockito.when(usersService.getById(userToUpdate.getId())).thenReturn(userToUpdate);
+    Mockito.when(usersService.update(userToUpdate.getId(), userDto)).thenReturn(expectedUser);
 
-    assertNotEquals(userUpdated, null);
+    response = this.usersController.update(expectedUser.getId(), userDto);
+    expectedResponse = new SucessResponse("User updated", expectedUser);
+
+    assertEquals(response, expectedResponse);
   }
 
   @Test
-  public void shouldDeleteUser() {
-    String userId;
+  public void shouldDeleteUser() throws NotFoundException, BadRequestException {
+    UserEntity expectedUser;
     Response response;
-    UserEntity userDeleted;
+    Response expectedResponse;
 
-    userId = this.userTest.getId();
-    response = this.usersController.delete(userId);
-    userDeleted = (UserEntity) response.getData();
+    expectedUser = new UserEntity("999999", "Alex Padilla", "alex@mail.com", "222222");
 
-    assertNotEquals(userDeleted, null);
+    Mockito.when(usersService.getById(expectedUser.getId())).thenReturn(expectedUser);
+    Mockito.when(usersService.delete(expectedUser.getId())).thenReturn(expectedUser);
+
+    response = this.usersController.delete(expectedUser.getId());
+    expectedResponse = new SucessResponse("User deleted", expectedUser);
+
+    assertEquals(response, expectedResponse);
   }
 
   @Test
   public void shouldGetAllUsers() {
+    UserEntity user1;
+    UserEntity user2;
+    UserEntity user3;
+    ArrayList<UserEntity> expectedUsers;
     Response response;
-    ArrayList<UserEntity> users;
+    Response expectedResponse;
+
+    user1 = new UserEntity("999999", "Alex Padilla", "alex@mail.com", "222222");
+    user2 = new UserEntity("888888", "Kenny Pinchao", "kenny@mail.com", "333333");
+    user3 = new UserEntity("777777", "Erick Erazo", "erick@mail.com", "444444");
+
+    expectedUsers = new ArrayList<UserEntity>();
+    expectedUsers.add(user1);
+    expectedUsers.add(user2);
+    expectedUsers.add(user3);
+
+    Mockito.when(usersService.getAll()).thenReturn(expectedUsers);
 
     response = this.usersController.getAll();
-    users = (ArrayList<UserEntity>) response.getData();
+    expectedResponse = new SucessResponse("OK", expectedUsers);
 
-    assertNotEquals(users, null);
+    assertEquals(response, expectedResponse);
+  }
+
+  private void setMock(UsersService mock) {
+    try {
+      Field instance = UsersService.class.getDeclaredField("instance");
+      instance.setAccessible(true);
+      instance.set(instance, mock);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 }

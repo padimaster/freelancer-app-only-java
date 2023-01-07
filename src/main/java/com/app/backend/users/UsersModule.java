@@ -1,5 +1,44 @@
 package com.app.backend.users;
 
-public class UsersModule {
+import com.app.backend.users.controllers.UsersController;
+import com.app.backend.users.repository.UsersRepository;
+import com.app.backend.users.services.UsersService;
 
+public class UsersModule {
+  private UsersController usersController;
+  protected UsersService usersService;
+  private UsersRepository usersRepository;
+
+  private static UsersModule instance = null;
+
+  private UsersModule() {
+    UsersRepository.getInstance();
+    UsersService.initInstance(usersRepository);
+    UsersController.initInstance(usersService);
+    this.usersService = UsersService.getInstance();
+    this.usersController = UsersController.getInstance();
+  }
+
+  public static void initInstance() {
+    instance = new UsersModule();
+  }
+
+  public static UsersModule getInstance() {
+    if (instance == null) {
+      throw new RuntimeException("Users Module not initialized");
+    }
+    return instance;
+  }
+
+  public UsersRepository getUsersRepository() {
+    return usersRepository;
+  }
+
+  public UsersService getUsersService() {
+    return usersService;
+  }
+
+  public UsersController getUsersController() {
+    return usersController;
+  }
 }

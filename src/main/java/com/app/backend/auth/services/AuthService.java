@@ -1,7 +1,6 @@
 package com.app.backend.auth.services;
 
 import com.app.backend.common.errors.InvalidCredentialsException;
-import com.app.backend.common.errors.NotFoundException;
 import com.app.backend.users.entities.UserEntity;
 import com.app.backend.users.services.UsersService;
 
@@ -9,13 +8,17 @@ public class AuthService {
   private static AuthService instance;
   private UsersService usersService;
 
-  private AuthService() {
-    usersService = UsersService.getInstance();
+  private AuthService(UsersService usersService) {
+    this.usersService = usersService;
+  }
+
+  public static void initInstance(UsersService usersService) {
+    instance = new AuthService(usersService);
   }
 
   public static AuthService getInstance() {
     if (instance == null) {
-      instance = new AuthService();
+      throw new RuntimeException("Users Service not initialized");
     }
     return instance;
   }

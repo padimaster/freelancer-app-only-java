@@ -7,7 +7,6 @@ import com.app.backend.users.entities.UserEntity;
 
 public class UsersRepository {
   ArrayList<UserEntity> users = new ArrayList<UserEntity>();
-
   private static UsersRepository instance = null;
 
   private UsersRepository() {
@@ -47,7 +46,6 @@ public class UsersRepository {
     currentUser = this.getById(id);
 
     if (currentUser == null) {
-      System.out.println("User not found!");
       return null;
     }
 
@@ -62,7 +60,6 @@ public class UsersRepository {
     UserEntity user = this.getById(id);
 
     if (user == null) {
-      System.out.println("User not found!");
       return null;
     }
 

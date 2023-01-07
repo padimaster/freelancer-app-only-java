@@ -11,15 +11,19 @@ import com.app.backend.users.services.UsersService;
 
 public class UsersController {
   private static UsersController instance = null;
-  private UsersService service;
+  private UsersService usersService;
 
-  private UsersController() {
-    this.service = UsersService.getInstance();
+  private UsersController(UsersService usersService) {
+    this.usersService = usersService;
+  }
+
+  public static void initInstance(UsersService usersService) {
+    instance = new UsersController(usersService);
   }
 
   public static UsersController getInstance() {
     if (instance == null) {
-      instance = new UsersController();
+      throw new RuntimeException("Users Service not initialized");
     }
     return instance;
   }
@@ -29,7 +33,7 @@ public class UsersController {
     Response response;
 
     try {
-      user = this.service.create(userDTO);
+      user = this.usersService.create(userDTO);
 
       response = new SucessResponse("User created", user);
     } catch (Exception e) {
@@ -44,7 +48,7 @@ public class UsersController {
     Response response;
 
     try {
-      users = this.service.getAll();
+      users = this.usersService.getAll();
       response = new SucessResponse("OK", users);
     } catch (Exception e) {
       response = new ErrorResponse(e.getMessage());
@@ -58,7 +62,7 @@ public class UsersController {
     Response response;
 
     try {
-      user = this.service.getById(id);
+      user = this.usersService.getById(id);
       response = new SucessResponse("User found", user);
     } catch (Exception e) {
       response = new ErrorResponse(e.getMessage());
@@ -72,7 +76,7 @@ public class UsersController {
     Response response;
 
     try {
-      user = this.service.update(id, userDTO);
+      user = this.usersService.update(id, userDTO);
       response = new SucessResponse("User updated", user);
     } catch (Exception e) {
       response = new ErrorResponse(e.getMessage());
@@ -86,7 +90,7 @@ public class UsersController {
     Response response;
 
     try {
-      user = this.service.delete(id);
+      user = this.usersService.delete(id);
       response = new SucessResponse("User deleted", user);
     } catch (Exception e) {
       response = new ErrorResponse(e.getMessage());

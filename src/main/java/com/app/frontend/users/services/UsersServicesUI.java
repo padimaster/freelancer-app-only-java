@@ -7,8 +7,8 @@ import com.app.backend.users.dtos.UserDTO;
 public class UsersServicesUI {
   private UsersController usersController;
 
-  public UsersServicesUI() {
-    this.usersController = UsersController.getInstance();
+  public UsersServicesUI(UsersController usersController) {
+    this.usersController = usersController;
   }
 
   public Response createUser(UserDTO creaUserDTO) {
@@ -25,21 +25,21 @@ public class UsersServicesUI {
     return response;
   }
 
-  public Response getAllUsers() {
+  public Response getAll() {
     Response response;
     response = this.usersController.getAll();
 
     return response;
   }
 
-  public Response updateUser(String userId, UserDTO updateUserDTO) {
+  public Response update(String userId, UserDTO updateUserDTO) {
     Response response;
     response = this.usersController.update(userId, updateUserDTO);
 
     return response;
   }
 
-  public Response deleteUser(String userId) {
+  public Response delete(String userId) {
     Response response;
     response = this.usersController.delete(userId);
 

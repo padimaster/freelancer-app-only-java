@@ -14,13 +14,17 @@ public class UsersService {
   private UsersRepository repository;
   private static UsersService instance = null;
 
-  private UsersService() {
-    this.repository = UsersRepository.getInstance();
+  private UsersService(UsersRepository repository) {
+    this.repository = repository;
+  }
+
+  public static void initInstance(UsersRepository repository) {
+    instance = new UsersService(repository);
   }
 
   public static UsersService getInstance() {
     if (instance == null) {
-      instance = new UsersService();
+      throw new RuntimeException("Users Service not initialized");
     }
     return instance;
   }
@@ -38,7 +42,9 @@ public class UsersService {
     newUser = new UserEntity(id, userDTO.getName(), userDTO.getEmail(),
         userDTO.getPassword());
 
-    return this.repository.insert(newUser);
+    this.repository.insert(newUser);
+
+    return newUser;
   }
 
   public ArrayList<UserEntity> getAll() {
@@ -62,11 +68,11 @@ public class UsersService {
     UserEntity dataToUpdate;
     UserEntity userUpdated;
 
-    userToUpdate = this.getById(id);
-
     if (!UserValidator.isUpdateUserDTO(userDTO)) {
       throw new BadRequestException();
     }
+
+    userToUpdate = this.getById(id);
 
     Cleaner.cleanBlanks(userDTO);
 
@@ -78,12 +84,13 @@ public class UsersService {
 
     userUpdated = this.repository.update(id, dataToUpdate);
 
-    return userUpdated;
+    return dataToUpdate;
   }
 
-  public UserEntity delete(String id) {
+  public UserEntity delete(String id) throws NotFoundException {
     UserEntity userDeleted;
 
+    this.getById(id);
     userDeleted = this.repository.delete(id);
 
     return userDeleted;
