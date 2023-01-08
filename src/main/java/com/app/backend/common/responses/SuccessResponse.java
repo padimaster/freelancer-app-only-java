@@ -1,8 +1,8 @@
 package com.app.backend.common.responses;
 
-public class SucessResponse extends Response {
+public class SuccessResponse extends Response {
 
-  public SucessResponse(String message, Object data) {
+  public SuccessResponse(String message, Object data) {
     super(false, message, data);
   }
 

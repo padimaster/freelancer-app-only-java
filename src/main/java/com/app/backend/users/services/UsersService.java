@@ -1,10 +1,12 @@
 package com.app.backend.users.services;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import com.app.backend.common.errors.BadRequestException;
 import com.app.backend.common.errors.NotFoundException;
 import com.app.backend.common.utils.Cleaner;
+import com.app.backend.common.utils.Generator;
 import com.app.backend.common.validators.UserValidator;
 import com.app.backend.users.dtos.UserDTO;
 import com.app.backend.users.entities.UserEntity;
@@ -19,7 +21,9 @@ public class UsersService {
   }
 
   public static void initInstance(UsersRepository repository) {
-    instance = new UsersService(repository);
+    if (instance == null) {
+      instance = new UsersService(repository);
+    }
   }
 
   public static UsersService getInstance() {
@@ -37,7 +41,7 @@ public class UsersService {
       throw new BadRequestException();
     }
 
-    id = this.repository.generateId();
+    id = Generator.generateId();
 
     newUser = new UserEntity(id, userDTO.getName(), userDTO.getEmail(),
         userDTO.getPassword());

@@ -2,7 +2,7 @@ package com.app.common.validators;
 
 public class ClassValidator {
   public static boolean isString(String value) {
-    return value != null && !value.isEmpty();
+    return value != null && value.length() > 0;
   }
 
   public static boolean isInteger(String value) {

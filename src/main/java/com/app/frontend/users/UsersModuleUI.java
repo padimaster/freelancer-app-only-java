@@ -9,13 +9,11 @@ import com.app.frontend.users.services.UsersServicesUI;
  *
  */
 public class UsersModuleUI {
-    UsersController usersController;
     UsersServicesUI usersServicesUI;
     UsersComponentUI usersComponentUI;
 
     public UsersModuleUI(UsersController usersController) {
-        this.usersController = usersController;
-        this.usersServicesUI = new UsersServicesUI(this.usersController);
+        this.usersServicesUI = new UsersServicesUI(usersController);
         this.usersComponentUI = new UsersComponentUI(this.usersServicesUI);
     }
 

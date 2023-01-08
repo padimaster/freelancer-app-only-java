@@ -2,6 +2,7 @@ package com.app.backend.users.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 
@@ -9,6 +10,7 @@ import java.lang.reflect.Field;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
 import org.mockito.Mockito;
 
 import com.app.backend.common.errors.BadRequestException;
@@ -24,9 +26,15 @@ public class UsersServicesTest {
   @Before
   public void setUp() {
     this.usersRepository = mock(UsersRepository.class);
-    setMock(usersRepository);
-    UsersService.initInstance(usersRepository);
+    setMock(this.usersRepository);
+    UsersService.initInstance(this.usersRepository);
     this.usersService = UsersService.getInstance();
+  }
+
+  @After
+  public void tearDown() {
+    this.usersRepository = null;
+    this.usersService = null;
   }
 
   @Test
@@ -39,9 +47,9 @@ public class UsersServicesTest {
     userDto = new UserDTO(expectedUser.getName(), expectedUser.getEmail(), expectedUser.getPassword());
 
     Mockito.when(usersRepository.insert(Mockito.any(UserEntity.class))).thenReturn(expectedUser);
-    Mockito.when(usersRepository.generateId()).thenReturn(expectedUser.getId());
 
     userCreated = usersService.create(userDto);
+    expectedUser.setId(userCreated.getId());
 
     assertEquals(userCreated, expectedUser);
   }
@@ -184,11 +192,11 @@ public class UsersServicesTest {
     instance.set(null, null);
   }
 
-  private void setMock(UsersRepository mock) {
+  private void setMock(UsersRepository usersRepository) {
     try {
       Field instance = UsersRepository.class.getDeclaredField("instance");
       instance.setAccessible(true);
-      instance.set(instance, mock);
+      instance.set(instance, usersRepository);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }

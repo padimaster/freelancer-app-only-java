@@ -1,7 +1,6 @@
 package com.app.backend.users.controllers;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import static org.mockito.Mockito.mock;
 
 import java.lang.reflect.Field;
@@ -15,10 +14,9 @@ import org.mockito.Mockito;
 import com.app.backend.common.errors.BadRequestException;
 import com.app.backend.common.errors.NotFoundException;
 import com.app.backend.common.responses.Response;
-import com.app.backend.common.responses.SucessResponse;
+import com.app.backend.common.responses.SuccessResponse;
 import com.app.backend.users.dtos.UserDTO;
 import com.app.backend.users.entities.UserEntity;
-import com.app.backend.users.repository.UsersRepository;
 import com.app.backend.users.services.UsersService;
 
 public class UsersControllerTest {
@@ -31,6 +29,12 @@ public class UsersControllerTest {
     setMock(usersService);
     UsersController.initInstance(usersService);
     this.usersController = UsersController.getInstance();
+  }
+
+  @After
+  public void tearDown() {
+    this.usersService = null;
+    this.usersController = null;
   }
 
   @Test
@@ -46,7 +50,7 @@ public class UsersControllerTest {
     Mockito.when(usersService.create(userDto)).thenReturn(expectedUser);
 
     response = this.usersController.create(userDto);
-    expectedResponse = new SucessResponse("User created", expectedUser);
+    expectedResponse = new SuccessResponse("User created", expectedUser);
 
     assertEquals(response, expectedResponse);
   }
@@ -63,7 +67,7 @@ public class UsersControllerTest {
 
     response = this.usersController.getById(expectedUser.getId());
 
-    expectedResponse = new SucessResponse("User found", expectedUser);
+    expectedResponse = new SuccessResponse("User found", expectedUser);
 
     assertEquals(response, expectedResponse);
   }
@@ -84,7 +88,7 @@ public class UsersControllerTest {
     Mockito.when(usersService.update(userToUpdate.getId(), userDto)).thenReturn(expectedUser);
 
     response = this.usersController.update(expectedUser.getId(), userDto);
-    expectedResponse = new SucessResponse("User updated", expectedUser);
+    expectedResponse = new SuccessResponse("User updated", expectedUser);
 
     assertEquals(response, expectedResponse);
   }
@@ -101,7 +105,7 @@ public class UsersControllerTest {
     Mockito.when(usersService.delete(expectedUser.getId())).thenReturn(expectedUser);
 
     response = this.usersController.delete(expectedUser.getId());
-    expectedResponse = new SucessResponse("User deleted", expectedUser);
+    expectedResponse = new SuccessResponse("User deleted", expectedUser);
 
     assertEquals(response, expectedResponse);
   }
@@ -127,7 +131,7 @@ public class UsersControllerTest {
     Mockito.when(usersService.getAll()).thenReturn(expectedUsers);
 
     response = this.usersController.getAll();
-    expectedResponse = new SucessResponse("OK", expectedUsers);
+    expectedResponse = new SuccessResponse("OK", expectedUsers);
 
     assertEquals(response, expectedResponse);
   }

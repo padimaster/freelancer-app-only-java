@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import com.app.backend.common.responses.Response;
-import com.app.backend.common.responses.SucessResponse;
+import com.app.backend.common.responses.SuccessResponse;
 import com.app.backend.users.dtos.UserDTO;
 import com.app.backend.users.entities.UserEntity;
 import com.app.frontend.users.services.UsersServicesUI;
@@ -46,7 +46,7 @@ public class UsersComponentUITest {
 
     expectedUser = new UserEntity("999999", "Alex Padilla", "alex@mail.com", "222222");
     userDTO = new UserDTO("Alex Padilla", "alex@mail.com", "222222");
-    response = new SucessResponse("User created", expectedUser);
+    response = new SuccessResponse("User created", expectedUser);
 
     Mockito.when(usersServicesUI.create(userDTO)).thenReturn(response);
 

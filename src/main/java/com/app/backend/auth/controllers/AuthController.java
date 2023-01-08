@@ -3,7 +3,7 @@ package com.app.backend.auth.controllers;
 import com.app.backend.auth.services.AuthService;
 import com.app.backend.common.responses.ErrorResponse;
 import com.app.backend.common.responses.Response;
-import com.app.backend.common.responses.SucessResponse;
+import com.app.backend.common.responses.SuccessResponse;
 import com.app.backend.users.entities.UserEntity;
 
 public class AuthController {
@@ -27,7 +27,7 @@ public class AuthController {
 
     try {
       user = authService.validateUser(id, password);
-      response = new SucessResponse("Successfully", user);
+      response = new SuccessResponse("Successfully", user);
     } catch (Exception e) {
       response = new ErrorResponse(e.getMessage());
     }

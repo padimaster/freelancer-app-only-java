@@ -37,7 +37,7 @@ public class UsersComponentUI {
     this.userOutput.printResponse(response);
   }
 
-  public void getUserById() {
+  public void getById() {
     Response response;
     String userId;
 
@@ -48,7 +48,7 @@ public class UsersComponentUI {
     this.userOutput.printResponse(response);
   }
 
-  public void getAllUsers() {
+  public void getAll() {
     Response response;
 
     response = this.usersServicesUI.getAll();
@@ -56,7 +56,7 @@ public class UsersComponentUI {
     this.userOutput.printResponse(response);
   }
 
-  public void updateUser() {
+  public void update() {
     Response response;
     String userId;
     UserDTO updateUserDTO;
@@ -69,7 +69,7 @@ public class UsersComponentUI {
     this.userOutput.printResponse(response);
   }
 
-  public void deleteUser() {
+  public void delete() {
     Response response;
     String userId;
 

@@ -14,7 +14,7 @@ import org.mockito.Mockito;
 
 import com.app.backend.common.responses.ErrorResponse;
 import com.app.backend.common.responses.Response;
-import com.app.backend.common.responses.SucessResponse;
+import com.app.backend.common.responses.SuccessResponse;
 import com.app.backend.users.controllers.UsersController;
 import com.app.backend.users.dtos.UserDTO;
 import com.app.backend.users.entities.UserEntity;
@@ -40,7 +40,7 @@ public class UsersServicesUITest {
 
     expectedUser = new UserEntity("999999", "Alex Padilla", "alex@mail.com", "222222");
     userDTO = new UserDTO("Alex Padilla", "alex@mail.com", "222222");
-    expectedResponse = new SucessResponse("User created", expectedUser);
+    expectedResponse = new SuccessResponse("User created", expectedUser);
 
     Mockito.when(usersController.create(userDTO)).thenReturn(expectedResponse);
 
@@ -83,7 +83,7 @@ public class UsersServicesUITest {
     expectedUsers.add(user2);
     expectedUsers.add(user3);
 
-    expectedResponse = new SucessResponse("OK", expectedUsers);
+    expectedResponse = new SuccessResponse("OK", expectedUsers);
     Mockito.when(usersServicesUI.getAll()).thenReturn(expectedResponse);
 
     response = this.usersController.getAll();
@@ -100,7 +100,7 @@ public class UsersServicesUITest {
 
     expectedUser = new UserEntity("999999", "Alex Padilla", "alex@mail.com", "222222");
     userDto = new UserDTO("Alex Padilla", "alex@mail.com", "222222");
-    expectedResponse = new SucessResponse("User updated", expectedUser);
+    expectedResponse = new SuccessResponse("User updated", expectedUser);
 
     Mockito.when(usersController.update(expectedUser.getId(), userDto)).thenReturn(expectedResponse);
 
@@ -116,7 +116,7 @@ public class UsersServicesUITest {
     Response expectedResponse;
 
     expectedUser = new UserEntity("999999", "Alex Padilla", "alex@mail.com", "222222");
-    expectedResponse = new SucessResponse("User deleted", expectedUser);
+    expectedResponse = new SuccessResponse("User deleted", expectedUser);
 
     Mockito.when(usersController.delete(expectedUser.getId())).thenReturn(expectedResponse);
 
