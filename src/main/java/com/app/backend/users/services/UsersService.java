@@ -1,13 +1,10 @@
 package com.app.backend.users.services;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 import com.app.backend.common.errors.BadRequestException;
 import com.app.backend.common.errors.NotFoundException;
-import com.app.backend.common.utils.Cleaner;
 import com.app.backend.common.utils.Generator;
-import com.app.backend.common.validators.UserValidator;
 import com.app.backend.users.dtos.UserDTO;
 import com.app.backend.users.entities.UserEntity;
 import com.app.backend.users.repository.UsersRepository;
@@ -37,14 +34,13 @@ public class UsersService {
     String id;
     UserEntity newUser;
 
-    if (!UserValidator.isCreateUserDTO(userDTO)) {
+    if (!userDTO.isCreateUserDTO()) {
       throw new BadRequestException();
     }
 
     id = Generator.generateId();
 
-    newUser = new UserEntity(id, userDTO.getName(), userDTO.getEmail(),
-        userDTO.getPassword());
+    newUser = new UserEntity(id, userDTO);
 
     this.repository.insert(newUser);
 
@@ -67,26 +63,29 @@ public class UsersService {
     return user;
   }
 
+  public UserEntity getByEmail(String email) throws NotFoundException {
+    UserEntity user;
+
+    user = this.repository.getByEmail(email);
+
+    if (user == null) {
+      throw new NotFoundException();
+    }
+
+    return user;
+  }
+
   public UserEntity update(String id, UserDTO userDTO) throws NotFoundException, BadRequestException {
-    UserEntity userToUpdate;
-    UserEntity dataToUpdate;
     UserEntity userUpdated;
 
-    if (!UserValidator.isUpdateUserDTO(userDTO)) {
+    if (!userDTO.isUpdateUserDTO()) {
       throw new BadRequestException();
     }
 
-    userToUpdate = this.getById(id);
+    // If id not found, throws NotFoundException
+    this.getById(id);
 
-    Cleaner.cleanBlanks(userDTO);
-
-    dataToUpdate = new UserEntity(
-        id,
-        userDTO.getName() != null ? userDTO.getName() : userToUpdate.getName(),
-        userDTO.getEmail() != null ? userDTO.getEmail() : userToUpdate.getEmail(),
-        userDTO.getPassword() != null ? userDTO.getPassword() : userToUpdate.getPassword());
-
-    userUpdated = this.repository.update(id, dataToUpdate);
+    userUpdated = this.repository.update(id, userDTO);
 
     return userUpdated;
   }
@@ -94,7 +93,9 @@ public class UsersService {
   public UserEntity delete(String id) throws NotFoundException {
     UserEntity userDeleted;
 
+    // If id not found, throws NotFoundException
     this.getById(id);
+
     userDeleted = this.repository.delete(id);
 
     return userDeleted;

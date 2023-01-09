@@ -1,15 +1,16 @@
 package com.app.backend.users.repository;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
+import com.app.backend.common.models.Repository;
+import com.app.backend.users.dtos.UserDTO;
 import com.app.backend.users.entities.UserEntity;
 
-public class UsersRepository {
-  ArrayList<UserEntity> users = new ArrayList<UserEntity>();
+public class UsersRepository extends Repository<UserEntity, UserDTO> {
   private static UsersRepository instance = null;
 
   private UsersRepository() {
+    super();
   }
 
   public static UsersRepository getInstance() {
@@ -20,17 +21,17 @@ public class UsersRepository {
   }
 
   public UserEntity insert(UserEntity user) {
-    this.users.add(user);
+    this.collection.add(user);
 
     return user;
   }
 
   public ArrayList<UserEntity> getAll() {
-    return this.users;
+    return this.collection;
   }
 
   public UserEntity getById(String id) {
-    for (UserEntity user : this.users) {
+    for (UserEntity user : this.collection) {
       if (user.getId().equals(id)) {
         return user;
       }
@@ -39,7 +40,17 @@ public class UsersRepository {
     return null;
   }
 
-  public UserEntity update(String id, UserEntity userData) {
+  public UserEntity getByEmail(String email) {
+    for (UserEntity user : this.collection) {
+      if (user.getEmail().equals(email)) {
+        return user;
+      }
+    }
+
+    return null;
+  }
+
+  public UserEntity update(String id, UserDTO userDTO) {
     UserEntity currentUser;
     UserEntity updatedUser;
 
@@ -49,9 +60,9 @@ public class UsersRepository {
       return null;
     }
 
-    int index = this.users.indexOf(currentUser);
-    updatedUser = new UserEntity(userData);
-    this.users.set(index, userData);
+    int index = this.collection.indexOf(currentUser);
+    updatedUser = getNewUserDataToUpdate(id, userDTO);
+    this.collection.set(index, updatedUser);
 
     return updatedUser;
   }
@@ -63,19 +74,27 @@ public class UsersRepository {
       return null;
     }
 
-    this.users.remove(user);
+    this.collection.remove(user);
     return user;
   }
 
   public boolean deleteAll() {
-    this.users.clear();
+    this.collection.clear();
 
     return true;
   }
 
-  public String generateId() {
-    UUID id = UUID.randomUUID();
+  // Parse user entity to get only the data that can be updated and delete nulls
+  private UserEntity getNewUserDataToUpdate(String id, UserDTO user) {
+    UserEntity newUser;
+    UserEntity currentUser;
 
-    return id.toString();
+    currentUser = this.getById(id);
+    newUser = new UserEntity(
+        id,
+        user.getName() != null ? user.getName() : currentUser.getName(),
+        user.getEmail() != null ? user.getEmail() : currentUser.getEmail());
+
+    return newUser;
   }
 }

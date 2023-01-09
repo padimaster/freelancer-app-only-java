@@ -1,7 +1,5 @@
 package com.app.frontend.users.components;
 
-import java.util.Scanner;
-
 import com.app.backend.common.responses.Response;
 import com.app.backend.users.dtos.UserDTO;
 import com.app.frontend.users.services.UsersServicesUI;

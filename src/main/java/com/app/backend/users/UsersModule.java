@@ -10,16 +10,16 @@ public class UsersModule {
 
   private static UsersModule instance = null;
 
-  private UsersModule() {
-    UsersService.initInstance(UsersRepository.getInstance());
+  private UsersModule(UsersRepository usersRepository) {
+    UsersService.initInstance(usersRepository);
     this.usersService = UsersService.getInstance();
 
     UsersController.initInstance(usersService);
     this.usersController = UsersController.getInstance();
   }
 
-  public static void initInstance() {
-    instance = new UsersModule();
+  public static void initInstance(UsersRepository usersRepository) {
+    instance = new UsersModule(usersRepository);
   }
 
   public static UsersModule getInstance() {

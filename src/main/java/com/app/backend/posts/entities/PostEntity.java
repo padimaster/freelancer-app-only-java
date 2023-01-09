@@ -13,6 +13,13 @@ public class PostEntity {
     this.authorId = authorId;
   }
 
+  public PostEntity(PostEntity userData) {
+    this.id = userData.getId();
+    this.title = userData.getTitle();
+    this.content = userData.getContent();
+    this.authorId = userData.getAuthorId();
+  }
+
   public String getId() {
     return id;
   }

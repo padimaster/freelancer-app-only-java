@@ -1,7 +1,7 @@
 package com.app.apps;
 
 import com.app.backend.users.UsersModule;
-import com.app.backend.users.controllers.UsersController;
+import com.app.backend.users.repository.UsersRepository;
 import com.app.frontend.users.UsersModuleUI;
 
 public class UsersApp {
@@ -9,13 +9,17 @@ public class UsersApp {
   private UsersModuleUI usersModuleUI;
 
   public UsersApp() {
-    UsersController usersController;
+    UsersRepository usersRepository;
 
-    UsersModule.initInstance();
+    // Users DB-Collection Instance
+    usersRepository = UsersRepository.getInstance();
+
+    // Users Module Instance
+    UsersModule.initInstance(usersRepository);
     this.usersModule = UsersModule.getInstance();
 
-    usersController = this.usersModule.getUsersController();
-    this.usersModuleUI = new UsersModuleUI(usersController);
+    // Users Module UI Instance
+    this.usersModuleUI = new UsersModuleUI(this.usersModule.getUsersController());
   }
 
   public UsersModule getUsersModule() {

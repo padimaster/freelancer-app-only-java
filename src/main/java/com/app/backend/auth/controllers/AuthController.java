@@ -1,33 +1,55 @@
 package com.app.backend.auth.controllers;
 
+import com.app.backend.auth.dtos.AuthDTO;
 import com.app.backend.auth.services.AuthService;
 import com.app.backend.common.responses.ErrorResponse;
 import com.app.backend.common.responses.Response;
 import com.app.backend.common.responses.SuccessResponse;
+import com.app.backend.users.dtos.UserDTO;
 import com.app.backend.users.entities.UserEntity;
 
 public class AuthController {
-  private static AuthController authController = null;
+  private static AuthController instance = null;
   private AuthService authService;
 
-  private AuthController() {
-    authService = AuthService.getInstance();
+  private AuthController(AuthService authService) {
+    this.authService = authService;
+  }
+
+  public static void initInstance(AuthService authService) {
+    if (instance == null) {
+      instance = new AuthController(authService);
+    }
   }
 
   public static AuthController getInstance() {
-    if (authController == null) {
-      authController = new AuthController();
+    if (instance == null) {
+      throw new RuntimeException("Auth Controller not initialized");
     }
-    return authController;
+    return instance;
   }
 
-  public Response login(String id, String password) {
+  public Response login(String email, String password) {
     Response response;
-    UserEntity user;
+    UserEntity authUser;
 
     try {
-      user = authService.validateUser(id, password);
-      response = new SuccessResponse("Successfully", user);
+      authUser = authService.validateCredentials(email, password);
+      response = new SuccessResponse("Successfully login", authUser);
+    } catch (Exception e) {
+      response = new ErrorResponse(e.getMessage());
+    }
+
+    return response;
+  }
+
+  public Response register(AuthDTO createAuthDTO, UserDTO creaUserDTO) {
+    Response response;
+    UserEntity newUser;
+
+    try {
+      newUser = authService.registerUser(createAuthDTO, creaUserDTO);
+      response = new SuccessResponse("Successfully registered", newUser);
     } catch (Exception e) {
       response = new ErrorResponse(e.getMessage());
     }

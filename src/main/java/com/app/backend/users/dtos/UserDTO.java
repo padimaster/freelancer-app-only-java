@@ -1,40 +1,51 @@
 package com.app.backend.users.dtos;
 
+import com.app.common.validators.ClassValidator;
+
 public class UserDTO {
   private String name;
   private String email;
-  private String password;
 
-  public UserDTO() {
-  }
-
-  public UserDTO(String name, String email, String password) {
+  public UserDTO(String name, String email) {
     this.name = name;
     this.email = email;
-    this.password = password;
+  }
+
+  public UserDTO(UserDTO user) {
+    this.name = user.getName();
+    this.email = user.getEmail();
   }
 
   public String getName() {
     return this.name;
   }
 
-  public void setName(String name) {
-    this.name = name;
-  }
-
   public String getEmail() {
     return this.email;
   }
 
-  public void setEmail(String email) {
-    this.email = email;
+  public boolean isCreateUserDTO() {
+    if (!ClassValidator.isString(this.name)) {
+      return false;
+    }
+
+    if (!ClassValidator.isEmail(this.email)) {
+      return false;
+    }
+
+    return true;
   }
 
-  public String getPassword() {
-    return this.password;
+  public boolean isUpdateUserDTO() {
+    if (this.name != null && !ClassValidator.isString(this.name)) {
+      return false;
+    }
+
+    if (this.email != null && !ClassValidator.isEmail(this.email)) {
+      return false;
+    }
+
+    return true;
   }
 
-  public void setPassword(String password) {
-    this.password = password;
-  }
 }

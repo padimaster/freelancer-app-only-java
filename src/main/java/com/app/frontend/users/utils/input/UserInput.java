@@ -12,13 +12,11 @@ public class UserInput extends Input {
     UserDTO userDTO;
     String name;
     String email;
-    String password;
 
     name = this.readString("Enter the name:");
     email = this.readString("Enter the email:");
-    password = this.readString("Enter the password:");
 
-    userDTO = new UserDTO(name, email, password);
+    userDTO = new UserDTO(name, email);
 
     return userDTO;
   }

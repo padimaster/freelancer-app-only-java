@@ -6,14 +6,12 @@ public class UserEntity {
   private String id;
   private String name;
   private String email;
-  private String password;
 
-  public UserEntity(String id, String name, String email, String password) {
+  public UserEntity(String id, String name, String email) {
     super();
     this.id = id;
     this.name = name;
     this.email = email;
-    this.password = password;
   }
 
   public UserEntity(UserEntity user) {
@@ -21,7 +19,6 @@ public class UserEntity {
     this.id = user.getId();
     this.name = user.getName();
     this.email = user.getEmail();
-    this.password = user.getPassword();
   }
 
   public UserEntity(String id, UserDTO user) {
@@ -29,39 +26,18 @@ public class UserEntity {
     this.id = id;
     this.name = user.getName();
     this.email = user.getEmail();
-    this.password = user.getPassword();
   }
 
   public String getId() {
     return id;
   }
 
-  public void setId(String id) {
-    this.id = id;
-  }
-
   public String getName() {
     return name;
   }
 
-  public void setName(String name) {
-    this.name = name;
-  }
-
   public String getEmail() {
     return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
-  public String getPassword() {
-    return password;
-  }
-
-  public void setPassword(String password) {
-    this.password = password;
   }
 
   @Override
@@ -72,7 +48,6 @@ public class UserEntity {
     data += "\tid: " + id + ", \n";
     data += "\tname: " + name + ", \n";
     data += "\temail: " + email + ", \n";
-    data += "\tpassword :" + password + "\n";
     data += "}";
 
     return data;
@@ -85,7 +60,6 @@ public class UserEntity {
     result = prime * result + ((id == null) ? 0 : id.hashCode());
     result = prime * result + ((name == null) ? 0 : name.hashCode());
     result = prime * result + ((email == null) ? 0 : email.hashCode());
-    result = prime * result + ((password == null) ? 0 : password.hashCode());
     return result;
   }
 
@@ -113,11 +87,7 @@ public class UserEntity {
         return false;
     } else if (!email.equals(other.email))
       return false;
-    if (password == null) {
-      if (other.password != null)
-        return false;
-    } else if (!password.equals(other.password))
-      return false;
+
     return true;
   }
 
