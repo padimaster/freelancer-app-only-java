@@ -53,10 +53,10 @@ public class UsersModuleTest {
     UserEntity user;
     UserEntity expectedUser;
 
-    response = usersController.getById("111111");
+    response = usersController.getById("222222");
     user = (UserEntity) response.getData();
 
-    expectedUser = new UserEntity("111111", "Kenny", "kenny@mail.com");
+    expectedUser = new UserEntity("222222", "Erick", "erick@mail.com");
 
     assertEquals(expectedUser, user);
   }
@@ -82,15 +82,20 @@ public class UsersModuleTest {
     Response response;
     Response expectedResponse;
     UserEntity deletedUser;
+    UserEntity userToDeleted;
 
-    deletedUser = this.usersModule.getUsersService().getById("111111");
-    response = usersController.delete("111111");
+    // Create user to delete
+    userToDeleted = (UserEntity) (this.usersController.create(new UserDTO("Alex", "alex@mail.com"))).getData();
+
+    // Delete user
+    deletedUser = this.usersModule.getUsersService().getById(userToDeleted.getId());
+    response = usersController.delete(userToDeleted.getId());
 
     expectedResponse = new SuccessResponse("User deleted", deletedUser);
 
     assertEquals(expectedResponse, response);
 
-    // Get user again to check if it was deleted
-    this.usersModule.getUsersService().getById("111111");
+    // Get user again to check if it was deleted (should throw NotFoundException)
+    this.usersModule.getUsersService().getById(userToDeleted.getId());
   }
 }
