@@ -2,31 +2,38 @@ package com.app.backend.users;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.app.backend.common.errors.BadRequestException;
 import com.app.backend.common.errors.NotFoundException;
 import com.app.backend.common.responses.Response;
 import com.app.backend.common.responses.SuccessResponse;
+import com.app.backend.database.Database;
 import com.app.backend.users.controllers.UsersController;
 import com.app.backend.users.dtos.UserDTO;
 import com.app.backend.users.entities.UserEntity;
-import com.app.backend.users.repository.UsersRepository;
 
 public class UsersModuleTest {
   private UsersModule usersModule;
   private UsersController usersController;
-  private UsersRepository usersRepository;
+  private Database database;
 
   @Before
-  public void setUp() {
-    // Init User Module
-    this.usersRepository = UsersRepository.getInstance();
-    this.usersRepository.insert(new UserEntity("111111", "Kenny", "kenny@mail.com"));
-    this.usersRepository.insert(new UserEntity("222222", "Erick", "erick@mail.com"));
+  public void setUp() throws BadRequestException {
+    // Init Database
+    Database.connect();
+    this.database = Database.getInstance();
 
-    UsersModule.initInstance(usersRepository);
+    // Init User Module
+    UsersModule.initInstance(this.database);
     this.usersModule = UsersModule.getInstance();
+
+    this.usersModule.getUsersService().create(new UserDTO("Cristian",
+        "cristian@mail.com"));
+    this.usersModule.getUsersService().create(new UserDTO("Cristina",
+        "cristina@mail.com"));
 
     this.usersController = this.usersModule.getUsersController();
   }
@@ -49,29 +56,40 @@ public class UsersModuleTest {
 
   @Test
   public void shouldGetUser() {
+    UserDTO createUserDTO;
     Response response;
     UserEntity user;
     UserEntity expectedUser;
 
-    response = usersController.getById("222222");
-    user = (UserEntity) response.getData();
+    createUserDTO = new UserDTO("Julio Sandobalin", "julio@mail.com");
+    response = usersController.create(createUserDTO);
+    expectedUser = (UserEntity) response.getData();
 
-    expectedUser = new UserEntity("222222", "Erick", "erick@mail.com");
+    response = usersController.getById(expectedUser.getId());
+    user = (UserEntity) response.getData();
 
     assertEquals(expectedUser, user);
   }
 
   @Test
   public void shouldUpdateUser() {
+    UserDTO createUserDTO;
     UserDTO updateUserDTO;
     Response response;
     Response expectedResponse;
+    UserEntity userToUpdate;
     UserEntity expectedUser;
 
-    updateUserDTO = new UserDTO("KennyPinchao", "new@mail.com");
-    response = usersController.update("111111", updateUserDTO);
+    // Create user to update
+    createUserDTO = new UserDTO("Johan Mantilla", "johan@mail.com");
+    response = usersController.create(createUserDTO);
+    userToUpdate = (UserEntity) response.getData();
 
-    expectedUser = new UserEntity("111111", "KennyPinchao", "new@mail.com");
+    // Update user
+    updateUserDTO = new UserDTO("Roberto Mantilla", "roberto@gmail.com");
+    response = usersController.update(userToUpdate.getId(), updateUserDTO);
+
+    expectedUser = new UserEntity(userToUpdate.getId(), "Roberto Mantilla", "roberto@gmail.com");
     expectedResponse = new SuccessResponse("User updated", expectedUser);
 
     assertEquals(expectedResponse, response);

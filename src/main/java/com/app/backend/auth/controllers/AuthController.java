@@ -48,7 +48,7 @@ public class AuthController {
     UserEntity newUser;
 
     try {
-      newUser = authService.registerUser(createAuthDTO, creaUserDTO);
+      newUser = authService.register(createAuthDTO, creaUserDTO);
       response = new SuccessResponse("Successfully registered", newUser);
     } catch (Exception e) {
       response = new ErrorResponse(e.getMessage());

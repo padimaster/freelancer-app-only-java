@@ -2,20 +2,23 @@ package com.app.backend.auth;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import javax.xml.crypto.Data;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.app.backend.auth.controllers.AuthController;
 import com.app.backend.auth.dtos.AuthDTO;
-import com.app.backend.auth.entities.AuthEntity;
-import com.app.backend.auth.repositories.AuthRepository;
+import com.app.backend.common.errors.BadRequestException;
+import com.app.backend.common.errors.EmailAlreadyExistsException;
 import com.app.backend.common.errors.NotFoundException;
 import com.app.backend.common.responses.ErrorResponse;
 import com.app.backend.common.responses.Response;
+import com.app.backend.database.Database;
 import com.app.backend.users.UsersModule;
 import com.app.backend.users.dtos.UserDTO;
 import com.app.backend.users.entities.UserEntity;
-import com.app.backend.users.repository.UsersRepository;
 
 public class AuthModuleTest {
   private UsersModule usersModule;
@@ -23,25 +26,20 @@ public class AuthModuleTest {
 
   private AuthController authController;
 
-  private UsersRepository usersRepository;
-  private AuthRepository authRepository;
+  private Database database;
 
   @Before
-  public void setUp() {
-    // Init User Module
-    this.usersRepository = UsersRepository.getInstance();
-    this.usersRepository.insert(new UserEntity("111111", "Kenny", "kenny@mail.com"));
-    this.usersRepository.insert(new UserEntity("222222", "Erick", "erick@mail.com"));
+  public void setUp() throws EmailAlreadyExistsException, BadRequestException {
+    // Init Database
+    Database.connect();
+    this.database = Database.getInstance();
 
-    UsersModule.initInstance(usersRepository);
+    // Init User Module
+    UsersModule.initInstance(this.database);
     this.usersModule = UsersModule.getInstance();
 
     // Init Auth Module
-    this.authRepository = AuthRepository.getInstance();
-    this.authRepository.insert(new AuthEntity("auth-1", "kenny@mail.com", "11111111"));
-    this.authRepository.insert(new AuthEntity("auth-2", "erick@mail.com", "22222222"));
-
-    AuthModule.initInstance(this.authRepository, usersModule.getUsersService());
+    AuthModule.initInstance(this.database, this.usersModule);
     this.authModule = AuthModule.getInstance();
 
     authController = this.authModule.getAuthController();
@@ -67,13 +65,16 @@ public class AuthModuleTest {
   }
 
   @Test
-  public void shouldLoginUser() throws NotFoundException {
+  public void shouldLoginUser() throws NotFoundException, EmailAlreadyExistsException, BadRequestException {
     AuthDTO authDTO;
     Response response;
     UserEntity expectedUser;
     UserEntity authUser;
 
-    authDTO = new AuthDTO("erick@mail.com", "22222222");
+    this.authModule.getAuthService().register(new AuthDTO("erick@mail.com", "11111111"),
+        new UserDTO("Erick", "erick@mail.com"));
+
+    authDTO = new AuthDTO("erick@mail.com", "11111111");
 
     // Logging user
     response = authController.login(authDTO.getEmail(), authDTO.getPassword());
@@ -85,12 +86,15 @@ public class AuthModuleTest {
   }
 
   @Test
-  public void shouldNotLoggingByInvalidCredentials() {
+  public void shouldNotLoggingByInvalidCredentials() throws EmailAlreadyExistsException, BadRequestException {
     AuthDTO authDTO;
     Response response;
     Response expectedResponse;
 
-    authDTO = new AuthDTO("erick@mail.com", "11111111");
+    this.authModule.getAuthService().register(new AuthDTO("kenny@mail.com", "22222222"),
+        new UserDTO("Kenny", "kenny@mail.com"));
+
+    authDTO = new AuthDTO("erick@mail.com", "111111111");
 
     // Logging user
     response = authController.login(authDTO.getEmail(), authDTO.getPassword());

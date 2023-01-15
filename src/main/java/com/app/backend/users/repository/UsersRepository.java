@@ -3,19 +3,28 @@ package com.app.backend.users.repository;
 import java.util.ArrayList;
 
 import com.app.backend.common.models.Repository;
+import com.app.backend.database.Database;
 import com.app.backend.users.dtos.UserDTO;
 import com.app.backend.users.entities.UserEntity;
 
 public class UsersRepository extends Repository<UserEntity, UserDTO> {
   private static UsersRepository instance = null;
+  private ArrayList<UserEntity> collection = new ArrayList<UserEntity>();
 
-  private UsersRepository() {
-    super();
+  private UsersRepository(Database database) {
+    super(database);
+    this.collection = database.getUsers();
+  }
+
+  public static void initInstance(Database database) {
+    if (instance == null) {
+      instance = new UsersRepository(database);
+    }
   }
 
   public static UsersRepository getInstance() {
     if (instance == null) {
-      instance = new UsersRepository();
+      throw new RuntimeException("Users Repository not initialized");
     }
     return instance;
   }

@@ -1,21 +1,16 @@
 package com.app.apps;
 
+import com.app.backend.database.Database;
 import com.app.backend.users.UsersModule;
-import com.app.backend.users.repository.UsersRepository;
 import com.app.frontend.users.UsersModuleUI;
 
 public class UsersApp {
   private UsersModule usersModule;
   private UsersModuleUI usersModuleUI;
 
-  public UsersApp() {
-    UsersRepository usersRepository;
-
-    // Users DB-Collection Instance
-    usersRepository = UsersRepository.getInstance();
-
+  public UsersApp(Database database) {
     // Users Module Instance
-    UsersModule.initInstance(usersRepository);
+    UsersModule.initInstance(database);
     this.usersModule = UsersModule.getInstance();
 
     // Users Module UI Instance

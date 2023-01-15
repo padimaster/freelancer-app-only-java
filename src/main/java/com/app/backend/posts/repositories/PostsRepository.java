@@ -3,19 +3,28 @@ package com.app.backend.posts.repositories;
 import java.util.ArrayList;
 
 import com.app.backend.common.models.Repository;
+import com.app.backend.database.Database;
 import com.app.backend.posts.dtos.PostDTO;
 import com.app.backend.posts.entities.PostEntity;
 
 public class PostsRepository extends Repository<PostEntity, PostDTO> {
   private static PostsRepository instance = null;
+  private ArrayList<PostEntity> collection = new ArrayList<PostEntity>();
 
-  private PostsRepository() {
-    super();
+  private PostsRepository(Database database) {
+    super(database);
+    this.collection = database.getPosts();
+  }
+
+  public static void initInstance(Database database) {
+    if (instance == null) {
+      instance = new PostsRepository(database);
+    }
   }
 
   public static PostsRepository getInstance() {
     if (instance == null) {
-      instance = new PostsRepository();
+      throw new RuntimeException("Posts Repository not initialized");
     }
     return instance;
   }

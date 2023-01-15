@@ -55,7 +55,7 @@ public class AuthService {
     return user;
   }
 
-  public UserEntity registerUser(AuthDTO createAuthDTO, UserDTO createUserDTO)
+  public UserEntity register(AuthDTO createAuthDTO, UserDTO createUserDTO)
       throws EmailAlreadyExistsException, BadRequestException {
     AuthEntity newAuthUser;
     UserDTO creaUserDTO;
