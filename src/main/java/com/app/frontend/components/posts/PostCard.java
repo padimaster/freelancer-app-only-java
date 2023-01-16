@@ -1,4 +1,4 @@
-package com.app.frontend.posts.components;
+package com.app.frontend.components.posts;
 
 import com.app.backend.posts.entities.PostEntity;
 

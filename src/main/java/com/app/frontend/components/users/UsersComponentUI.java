@@ -1,15 +1,13 @@
-package com.app.frontend.users.components;
+package com.app.frontend.components.users;
 
 import com.app.backend.common.responses.Response;
 import com.app.backend.users.dtos.UserDTO;
-import com.app.frontend.users.services.UsersServicesUI;
-import com.app.frontend.users.utils.input.UserInput;
-import com.app.frontend.users.utils.output.UserOutput;
+import com.app.frontend.common.input.UserInput;
+import com.app.frontend.services.UsersServiceUI;
 
 public class UsersComponentUI {
-  private UsersServicesUI usersServicesUI;
+  private UsersServiceUI usersServicesUI;
   private UserInput userInput;
-  private UserOutput userOutput;
 
   // public UsersComponentUI(UserEntity admin, UsersController usersController) {
   // this.usersServicesUI = new UsersServicesUI(usersController);
@@ -18,21 +16,23 @@ public class UsersComponentUI {
   // this.admin = admin;
   // }
 
-  public UsersComponentUI(UsersServicesUI usersServicesUI) {
+  public UsersComponentUI(UsersServiceUI usersServicesUI) {
     this.userInput = new UserInput();
     this.usersServicesUI = usersServicesUI;
-    this.userOutput = new UserOutput();
   }
 
   public void create() {
     Response response;
     UserDTO createUserDTO;
 
+    // Create user dto from user input
     createUserDTO = this.userInput.readUserDTO();
 
+    // Response from users service UI
     response = this.usersServicesUI.create(createUserDTO);
 
-    this.userOutput.printResponse(response);
+    // Print response
+    System.out.println(response);
   }
 
   public void getById() {
@@ -43,7 +43,7 @@ public class UsersComponentUI {
 
     response = this.usersServicesUI.getUserById(userId);
 
-    this.userOutput.printResponse(response);
+    System.out.println(response);
   }
 
   public void getAll() {
@@ -51,7 +51,7 @@ public class UsersComponentUI {
 
     response = this.usersServicesUI.getAll();
 
-    this.userOutput.printResponse(response);
+    System.out.println(response);
   }
 
   public void update() {
@@ -64,7 +64,7 @@ public class UsersComponentUI {
 
     response = this.usersServicesUI.update(userId, updateUserDTO);
 
-    this.userOutput.printResponse(response);
+    System.out.println(response);
   }
 
   public void delete() {
@@ -75,6 +75,6 @@ public class UsersComponentUI {
 
     response = this.usersServicesUI.delete(userId);
 
-    this.userOutput.printResponse(response);
+    System.out.println(response);
   }
 }

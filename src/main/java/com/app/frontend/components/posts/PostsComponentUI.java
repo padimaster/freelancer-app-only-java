@@ -1,24 +1,21 @@
-package com.app.frontend.posts.components;
+package com.app.frontend.components.posts;
 
 import com.app.backend.common.responses.Response;
 import com.app.backend.posts.controller.PostsController;
 import com.app.backend.posts.dtos.PostDTO;
 import com.app.backend.users.entities.UserEntity;
-import com.app.frontend.common.output.Output;
-import com.app.frontend.posts.services.PostsServiceUI;
-import com.app.frontend.posts.utils.input.PostsInput;
+import com.app.frontend.common.input.PostsInput;
+import com.app.frontend.services.PostsServiceUI;
 
 public class PostsComponentUI {
   private PostsController postsController;
   private PostsServiceUI postsServiceUI;
   private PostsInput postsInput;
   private UserEntity user;
-  private Output output;
 
   public PostsComponentUI(UserEntity user, PostsController postsController) {
     this.postsServiceUI = new PostsServiceUI(postsController);
     this.postsInput = new PostsInput();
-    this.output = new Output();
     this.user = user;
   }
 
@@ -30,7 +27,7 @@ public class PostsComponentUI {
 
     response = this.postsServiceUI.create(createPostDTO);
 
-    this.output.printResponse(response);
+    System.out.println(response);
   }
 
   public void getById() {
@@ -41,7 +38,7 @@ public class PostsComponentUI {
 
     response = this.postsServiceUI.getPostById(userId);
 
-    this.output.printResponse(response);
+    System.out.println(response);
   }
 
   public void getAll() {
@@ -49,7 +46,7 @@ public class PostsComponentUI {
 
     response = this.postsServiceUI.getAll();
 
-    this.output.printResponse(response);
+    System.out.println(response);
   }
 
   public void update() {
@@ -62,7 +59,7 @@ public class PostsComponentUI {
 
     response = this.postsServiceUI.update(userId, updatePostDTO);
 
-    this.output.printResponse(response);
+    System.out.println(response);
   }
 
   public void delete() {
@@ -73,6 +70,6 @@ public class PostsComponentUI {
 
     response = this.postsServiceUI.delete(userId);
 
-    this.output.printResponse(response);
+    System.out.println(response);
   }
 }

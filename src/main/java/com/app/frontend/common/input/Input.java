@@ -17,4 +17,18 @@ public class Input {
 
     return input;
   }
+
+  public int readInt(String message) {
+    int input;
+
+    System.out.println(message);
+
+    try {
+      input = Integer.parseInt(scanner.nextLine());
+    } catch (NumberFormatException e) {
+      input = -1;
+    }
+
+    return input;
+  }
 }

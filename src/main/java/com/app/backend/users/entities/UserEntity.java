@@ -8,21 +8,18 @@ public class UserEntity {
   private String email;
 
   public UserEntity(String id, String name, String email) {
-    super();
     this.id = id;
     this.name = name;
     this.email = email;
   }
 
   public UserEntity(UserEntity user) {
-    super();
     this.id = user.getId();
     this.name = user.getName();
     this.email = user.getEmail();
   }
 
   public UserEntity(String id, UserDTO user) {
-    super();
     this.id = id;
     this.name = user.getName();
     this.email = user.getEmail();

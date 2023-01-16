@@ -34,6 +34,7 @@ public class UsersService {
     String id;
     UserEntity newUser;
 
+    // If userDTO is not valid, throws BadRequestException
     if (!userDTO.isCreateUserDTO()) {
       throw new BadRequestException();
     }

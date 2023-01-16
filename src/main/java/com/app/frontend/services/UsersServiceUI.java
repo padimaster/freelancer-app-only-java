@@ -1,13 +1,13 @@
-package com.app.frontend.users.services;
+package com.app.frontend.services;
 
 import com.app.backend.common.responses.Response;
 import com.app.backend.users.controllers.UsersController;
 import com.app.backend.users.dtos.UserDTO;
 
-public class UsersServicesUI {
+public class UsersServiceUI {
   private UsersController usersController;
 
-  public UsersServicesUI(UsersController usersController) {
+  public UsersServiceUI(UsersController usersController) {
     this.usersController = usersController;
   }
 

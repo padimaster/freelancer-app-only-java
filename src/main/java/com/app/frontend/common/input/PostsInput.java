@@ -1,7 +1,6 @@
-package com.app.frontend.posts.utils.input;
+package com.app.frontend.common.input;
 
 import com.app.backend.posts.dtos.PostDTO;
-import com.app.frontend.common.input.Input;
 
 public class PostsInput extends Input {
   public PostDTO readPostDTO() {

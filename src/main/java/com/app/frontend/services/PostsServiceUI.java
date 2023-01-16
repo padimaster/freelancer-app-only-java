@@ -1,4 +1,4 @@
-package com.app.frontend.posts.services;
+package com.app.frontend.services;
 
 import com.app.backend.common.responses.Response;
 import com.app.backend.posts.controller.PostsController;

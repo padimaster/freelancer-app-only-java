@@ -13,18 +13,23 @@ public class UsersModule {
   private static UsersModule instance = null;
 
   private UsersModule(Database database) {
+    // Users Repository Instance
     UsersRepository.initInstance(database);
     this.usersRepository = UsersRepository.getInstance();
 
+    // Users Service Instance
     UsersService.initInstance(this.usersRepository);
     this.usersService = UsersService.getInstance();
 
+    // Users Controller Instance
     UsersController.initInstance(usersService);
     this.usersController = UsersController.getInstance();
   }
 
   public static void initInstance(Database database) {
-    instance = new UsersModule(database);
+    if (instance == null) {
+      instance = new UsersModule(database);
+    }
   }
 
   public static UsersModule getInstance() {
