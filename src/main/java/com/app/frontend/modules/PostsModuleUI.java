@@ -1,14 +1,15 @@
 package com.app.frontend.modules;
 
 import com.app.backend.posts.controller.PostsController;
+import com.app.backend.users.entities.UserEntity;
 import com.app.frontend.components.posts.PostsComponentUI;
 import com.app.frontend.services.PostsServiceUI;
 
-public class PostsModulesUI {
+public class PostsModuleUI {
   private PostsComponentUI postsComponentUI;
   private PostsServiceUI postsServiceUI;
 
-  public PostsModulesUI(PostsController postsController) {
+  public PostsModuleUI(PostsController postsController) {
     this.postsServiceUI = new PostsServiceUI(postsController);
   }
 

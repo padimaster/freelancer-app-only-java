@@ -41,11 +41,9 @@ public class UserEntity {
   public String toString() {
     String data;
 
-    data = "{\n";
-    data += "\tid: " + id + ", \n";
-    data += "\tname: " + name + ", \n";
-    data += "\temail: " + email + ", \n";
-    data += "}";
+    data = "\t( ID ): " + id + " \n";
+    data += "\t(Name ): " + name + " \n";
+    data += "\t( Email ): " + email + " \n";
 
     return data;
   }

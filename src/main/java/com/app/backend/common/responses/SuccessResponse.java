@@ -6,15 +6,4 @@ public class SuccessResponse extends Response {
     super(false, message, data);
   }
 
-  @Override
-  public String toString() {
-    String data;
-
-    data = "{\n";
-    data += "\tmessage: " + this.message + ", \n";
-    data += "\tdata: " + this.data + ", \n";
-    data += "}";
-
-    return data;
-  }
 }

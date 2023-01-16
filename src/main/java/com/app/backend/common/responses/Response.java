@@ -25,15 +25,18 @@ public class Response {
 
   @Override
   public String toString() {
-    String response;
+    String sepparator = "##################################################\n";
+    String formatedResponse = sepparator + "\n";
 
-    response = "{\n";
-    response += "\tid: " + error + ", \n";
-    response += "\tname: " + message + ", \n";
-    response += "\temail: " + data + ", \n";
-    response += "}";
+    formatedResponse += "\t[" + message + "]\n\n";
 
-    return response;
+    if (data != null) {
+      formatedResponse += data.toString();
+    }
+
+    formatedResponse += "\n\n" + sepparator + "\n";
+
+    return formatedResponse;
   }
 
   @Override
