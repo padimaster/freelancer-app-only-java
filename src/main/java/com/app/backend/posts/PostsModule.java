@@ -34,11 +34,11 @@ public class PostsModule {
     return instance;
   }
 
-  public PostsService getUsersService() {
+  public PostsService getPostsService() {
     return usersService;
   }
 
-  public PostsController getUsersController() {
+  public PostsController getPostsController() {
     return usersController;
   }
 

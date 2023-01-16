@@ -24,7 +24,7 @@ public class AuthDTO {
     return password;
   }
 
-  public boolean isValidCreateDTO() {
+  public boolean isCreateDTO() {
     if (!ClassValidator.isEmail(this.email)) {
       return false;
     }
@@ -36,7 +36,7 @@ public class AuthDTO {
     return true;
   }
 
-  public boolean isValidUpdateDTO() {
+  public boolean isUpdateDTO() {
     if (this.email != null && !ClassValidator.isEmail(this.email)) {
       return false;
     }

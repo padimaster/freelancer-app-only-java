@@ -1,20 +1,18 @@
 package com.app.frontend.components.posts;
 
 import com.app.backend.common.responses.Response;
-import com.app.backend.posts.controller.PostsController;
 import com.app.backend.posts.dtos.PostDTO;
 import com.app.backend.users.entities.UserEntity;
 import com.app.frontend.common.input.PostsInput;
 import com.app.frontend.services.PostsServiceUI;
 
 public class PostsComponentUI {
-  private PostsController postsController;
   private PostsServiceUI postsServiceUI;
   private PostsInput postsInput;
   private UserEntity user;
 
-  public PostsComponentUI(UserEntity user, PostsController postsController) {
-    this.postsServiceUI = new PostsServiceUI(postsController);
+  public PostsComponentUI(UserEntity user, PostsServiceUI postsServiceUI) {
+    this.postsServiceUI = postsServiceUI;
     this.postsInput = new PostsInput();
     this.user = user;
   }
@@ -23,7 +21,7 @@ public class PostsComponentUI {
     Response response;
     PostDTO createPostDTO;
 
-    createPostDTO = this.postsInput.readPostDTO();
+    createPostDTO = this.postsInput.readPostDTO(user.getId());
 
     response = this.postsServiceUI.create(createPostDTO);
 
@@ -49,26 +47,21 @@ public class PostsComponentUI {
     System.out.println(response);
   }
 
-  public void update() {
+  public void update(String postId) {
     Response response;
-    String userId;
     PostDTO updatePostDTO;
 
-    userId = this.postsInput.readString("Enter the user id:");
-    updatePostDTO = this.postsInput.readPostDTO();
+    updatePostDTO = this.postsInput.readPostDTO(this.user.getId());
 
-    response = this.postsServiceUI.update(userId, updatePostDTO);
+    response = this.postsServiceUI.update(postId, updatePostDTO);
 
     System.out.println(response);
   }
 
-  public void delete() {
+  public void delete(String postId) {
     Response response;
-    String userId;
 
-    userId = this.postsInput.readString("Enter the user id:");
-
-    response = this.postsServiceUI.delete(userId);
+    response = this.postsServiceUI.delete(postId);
 
     System.out.println(response);
   }

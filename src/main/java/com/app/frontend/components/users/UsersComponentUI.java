@@ -2,23 +2,19 @@ package com.app.frontend.components.users;
 
 import com.app.backend.common.responses.Response;
 import com.app.backend.users.dtos.UserDTO;
+import com.app.backend.users.entities.UserEntity;
 import com.app.frontend.common.input.UserInput;
 import com.app.frontend.services.UsersServiceUI;
 
 public class UsersComponentUI {
   private UsersServiceUI usersServicesUI;
   private UserInput userInput;
+  private UserEntity admin;
 
-  // public UsersComponentUI(UserEntity admin, UsersController usersController) {
-  // this.usersServicesUI = new UsersServicesUI(usersController);
-  // this.userInput = new UserInput();
-  // this.userOutput = new UserOutput();
-  // this.admin = admin;
-  // }
-
-  public UsersComponentUI(UsersServiceUI usersServicesUI) {
+  public UsersComponentUI(UserEntity admin, UsersServiceUI usersServicesUI) {
     this.userInput = new UserInput();
     this.usersServicesUI = usersServicesUI;
+    this.admin = admin;
   }
 
   public void create() {

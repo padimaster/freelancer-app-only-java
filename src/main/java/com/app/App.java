@@ -3,12 +3,20 @@ package com.app;
 import com.app.apps.AuthApp;
 import com.app.apps.UsersApp;
 import com.app.backend.database.Database;
+import com.app.backend.users.entities.UserEntity;
+import com.app.frontend.components.auth.AuthMenu;
+import com.app.frontend.components.menu.Menu;
 
 public class App {
 
   public static void main(String[] args) {
     UsersApp usersApp;
     AuthApp authApp;
+
+    AuthMenu authMenu;
+    Menu menu;
+
+    UserEntity user;
 
     // Databse Connection
     Database.connect();
@@ -19,9 +27,8 @@ public class App {
     // Auth App Instance
     authApp = new AuthApp(Database.getInstance(), usersApp.getUsersModule());
 
-    authApp.getAuthModuleUI().getAuthComponentUI().login();
-    authApp.getAuthModuleUI().getAuthComponentUI().register();
-    authApp.getAuthModuleUI().getAuthComponentUI().login();
-
+    // Menu Instance
+    menu = new Menu(usersApp.getUsersModuleUI(), authApp.getAuthModuleUI());
+    menu.show();
   }
 }

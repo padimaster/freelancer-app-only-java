@@ -12,7 +12,7 @@ public class Input {
   public String readString(String message) {
     String input;
 
-    System.out.println(message);
+    System.out.print(message);
     input = scanner.nextLine();
 
     return input;
@@ -21,10 +21,8 @@ public class Input {
   public int readInt(String message) {
     int input;
 
-    System.out.println(message);
-
     try {
-      input = Integer.parseInt(scanner.nextLine());
+      input = Integer.parseInt(readString(message));
     } catch (NumberFormatException e) {
       input = -1;
     }

@@ -3,6 +3,7 @@ package com.app.frontend.components.auth;
 import com.app.backend.auth.dtos.AuthDTO;
 import com.app.backend.common.responses.Response;
 import com.app.backend.users.dtos.UserDTO;
+import com.app.backend.users.entities.UserEntity;
 import com.app.frontend.common.input.AuthInput;
 import com.app.frontend.common.input.UserInput;
 import com.app.frontend.services.AuthServiceUI;
@@ -18,14 +19,16 @@ public class AuthComponentUI {
     this.authInput = new AuthInput();
   }
 
-  public void register() {
+  public UserEntity register() {
     Response response;
     AuthDTO createAuthDTO;
     UserDTO createUserDTO;
 
     // Create auth dto from user input
+    System.out.println("Enter the user credentials (Password min length 8, max length 20):");
     createAuthDTO = this.authInput.readAuthDTO();
 
+    System.out.println("\nUser information:");
     // Create user dto from user input
     createUserDTO = userInput.readUserDTO();
 
@@ -33,9 +36,11 @@ public class AuthComponentUI {
     response = this.authServicesUI.register(createAuthDTO, createUserDTO);
 
     System.out.println(response);
+
+    return (UserEntity) response.getData();
   }
 
-  public void login() {
+  public UserEntity login() {
     Response response;
     String email;
     String password;
@@ -46,5 +51,7 @@ public class AuthComponentUI {
     response = this.authServicesUI.login(email, password);
 
     System.out.println(response);
+
+    return (UserEntity) response.getData();
   }
 }

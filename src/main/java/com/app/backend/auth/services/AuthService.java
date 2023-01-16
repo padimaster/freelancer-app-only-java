@@ -5,6 +5,7 @@ import com.app.backend.auth.entities.AuthEntity;
 import com.app.backend.auth.repositories.AuthRepository;
 import com.app.backend.common.errors.BadRequestException;
 import com.app.backend.common.errors.EmailAlreadyExistsException;
+import com.app.backend.common.errors.EmailMismatchException;
 import com.app.backend.common.errors.InvalidCredentialsException;
 import com.app.backend.common.errors.NotFoundException;
 import com.app.backend.common.utils.Generator;
@@ -56,13 +57,21 @@ public class AuthService {
   }
 
   public UserEntity register(AuthDTO createAuthDTO, UserDTO createUserDTO)
-      throws EmailAlreadyExistsException, BadRequestException {
+      throws EmailAlreadyExistsException, BadRequestException, EmailMismatchException {
     AuthEntity newAuthUser;
     UserDTO creaUserDTO;
     UserEntity newUser;
 
-    if (!createAuthDTO.isValidCreateDTO()) {
+    if (!createAuthDTO.isCreateDTO()) {
       throw new BadRequestException();
+    }
+
+    if (!createUserDTO.isCreateUserDTO()) {
+      throw new BadRequestException();
+    }
+
+    if (!createAuthDTO.getEmail().equals(createUserDTO.getEmail())) {
+      throw new EmailMismatchException();
     }
 
     if (repository.getByEmail(createAuthDTO.getEmail()) != null) {

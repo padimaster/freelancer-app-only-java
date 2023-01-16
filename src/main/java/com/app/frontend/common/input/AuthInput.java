@@ -12,8 +12,8 @@ public class AuthInput extends Input {
     String email;
     String password;
 
-    email = this.readString("Enter the email:");
-    password = this.readString("Enter the password:");
+    email = this.readString("Enter the email: ");
+    password = this.readString("Enter the password: ");
 
     authDTO = new AuthDTO(email, password);
 

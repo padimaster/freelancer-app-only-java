@@ -12,8 +12,15 @@ public class UserInput extends Input {
     String name;
     String email;
 
-    name = this.readString("Enter the name:");
-    email = this.readString("Enter the email:");
+    name = this.readString("Enter the name: ");
+    if (name.equals("")) {
+      name = null;
+    }
+
+    email = this.readString("Enter the email: ");
+    if (email.equals("")) {
+      email = null;
+    }
 
     userDTO = new UserDTO(name, email);
 
